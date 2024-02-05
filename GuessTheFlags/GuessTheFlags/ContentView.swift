@@ -40,6 +40,8 @@ struct ContentView: View {
     @State private var selectedFlag = 0
     @State private var round = 1
     @State private var showEndGame = false
+    @State private var animationAmounts = [0.0, 0.0, 0.0]
+    @State private var tappedFlag: Int?
     
     var body: some View {
         ZStack {
@@ -65,10 +67,16 @@ struct ContentView: View {
                     
                     ForEach(0..<3) {number in
                         Button {
+                            withAnimation(.spring(duration: 1, bounce: 0.2)) {
+                                tappedFlag = number
+                            }
                             flagTapped(number)
                         } label: {
                             FlagImage(imageName: countries[number])
                         }
+                        .rotation3DEffect(
+                            .degrees(tappedFlag == number ? 360 : 0), axis: (x: 0.0, y: 1.0, z: 0.0)
+                        )
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -124,11 +132,13 @@ struct ContentView: View {
         round += 1
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+        tappedFlag = nil
     }
     
     func reset() {
         userScore = 0
         round = 1
+        tappedFlag = nil
     }
 }
 
