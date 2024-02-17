@@ -35,13 +35,32 @@ class Order: Codable {
     var extraFrosting = false
     var addSprincles = false
     
-    var name = ""
-    var streetAddress = ""
-    var city = ""
-    var zip = ""
+    var name = UserDefaults.standard.string(forKey: "orderAddressName") ?? "" {
+        didSet {
+            UserDefaults.standard.setValue(name, forKey: "orderAddressName")
+        }
+    }
+    var streetAddress = UserDefaults.standard.string(forKey: "orderStreetAddress") ?? "" {
+        didSet {
+            UserDefaults.standard.setValue(streetAddress, forKey: "orderStreetAddress")
+        }
+    }
+    var city = UserDefaults.standard.string(forKey: "orderAddressCity") ?? "" {
+        didSet {
+            UserDefaults.standard.setValue(city, forKey: "orderAddressCity")
+        }
+    }
+    var zip = UserDefaults.standard.string(forKey: "orderAddressZip") ?? "" {
+        didSet {
+            UserDefaults.standard.setValue(zip, forKey: "orderAddressZip")
+        }
+    }
     
     var hasValidAddress: Bool {
-        if name.isEmpty || streetAddress.isEmpty || city.isEmpty || zip.isEmpty {
+        if name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+            streetAddress.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+            city.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+            zip.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             return false
         }
         

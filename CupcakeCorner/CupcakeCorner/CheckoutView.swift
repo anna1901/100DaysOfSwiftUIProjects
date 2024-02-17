@@ -11,6 +11,8 @@ struct CheckoutView: View {
     var order: Order
     @State private var confirmationMessage = ""
     @State private var showingConfirmation = false
+    @State private var alertMessage = ""
+    @State private var showAlert = false
     
     var body: some View {
         ScrollView {
@@ -43,6 +45,12 @@ struct CheckoutView: View {
         } message: {
             Text(confirmationMessage)
         }
+        .alert("Failure", isPresented: $showAlert) {
+            Button("OK") {}
+        } message: {
+            Text(alertMessage)
+        }
+        
 
     }
     
@@ -51,7 +59,6 @@ struct CheckoutView: View {
             print ("Faield to encode order: \(order)")
             return
         }
-        print(encoded)
         
         let url = URL(string: "https://reqres.in/api/cupcakes")!
         var request = URLRequest(url: url)
@@ -64,7 +71,8 @@ struct CheckoutView: View {
             confirmationMessage = "Your order for \(decodedOrder.quantity)x \(Order.types[decodedOrder.type]) cupcakes was placed"
             showingConfirmation = true
         } catch {
-            print("Check out failed: \(error.localizedDescription)")
+            alertMessage = "Check out failed: \(error.localizedDescription)"
+            showAlert = true
         }
     }
 }
